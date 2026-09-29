@@ -80,8 +80,17 @@ const dialogTitle = document.querySelector("#dialog-title");
 let matches = loadMatches();
 let hadBingo = hasBingo();
 let celebrationTimer = null;
+let celebrateLoadedBingo = false;
 let activeId = null;
 let lastActiveTile = null;
+
+if (hadBingo) {
+  try {
+    celebrateLoadedBingo = window.sessionStorage.getItem("human-bingo-celebration-seen-v1") !== "true";
+  } catch {
+    celebrateLoadedBingo = true;
+  }
+}
 
 function normalizePrompt(prompt) {
   return prompt.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9]+/g, " ").trim();
@@ -147,7 +156,7 @@ function hasBingo() {
 
 function createConfetti() {
   const colors = ["#e97858", "#f3c969", "#478866", "#d98191", "#fbf7ed"];
-  const pieces = Array.from({ length: 44 }, (_, index) => {
+  Array.from({ length: 44 }, (_, index) => {
     const piece = document.createElement("span");
     const duration = 2400 + Math.random() * 1100;
     piece.className = "confetti-piece";
@@ -159,9 +168,7 @@ function createConfetti() {
     piece.style.setProperty("--piece-color", colors[index % colors.length]);
     piece.style.setProperty("--piece-size", `${6 + Math.random() * 7}px`);
     celebrationConfetti.append(piece);
-    return piece;
   });
-  return pieces;
 }
 
 function celebrateBingo() {
@@ -172,6 +179,11 @@ function celebrateBingo() {
   celebrationTimer = window.setTimeout(() => {
     celebration.hidden = true;
   }, 3900);
+  try {
+    window.sessionStorage.setItem("human-bingo-celebration-seen-v1", "true");
+  } catch {
+    // A private browsing mode may disable session storage.
+  }
 }
 
 function makeSpan(className, text) {
@@ -226,7 +238,10 @@ function updateStatus() {
   countLabel.append(total);
   clearButton.disabled = count === 0;
   const bingoNow = hasBingo();
-  if (bingoNow && !hadBingo) celebrateBingo();
+  if (bingoNow && (!hadBingo || celebrateLoadedBingo)) {
+    celebrateBingo();
+    celebrateLoadedBingo = false;
+  }
   hadBingo = bingoNow;
 }
 
