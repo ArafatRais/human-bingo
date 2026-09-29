@@ -33,7 +33,7 @@ const prompts = [
   "Loves late-night conversations"
 ];
 
-const storageKey = "people-bingo-matches-v1";
+const storageKey = "human-bingo-project-matches-v1";
 const grid = document.querySelector("#bingo-grid");
 const dialog = document.querySelector("#name-dialog");
 const input = document.querySelector("#person-name");
