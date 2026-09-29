@@ -49,12 +49,13 @@ button, input { font: inherit; }
 .bingo-notice span { color: var(--coral); font-size: 1.1rem; }
 .swipe-hint { display: none; margin: -5px 0 11px; color: #898d80; font-size: .72rem; }
 .board-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-color: #c9c4b5 #f4f0e6; scrollbar-width: thin; }
-.grid { display: grid; min-width: 690px; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; }
+.grid { display: grid; min-width: 580px; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
 .tile { display: flex; min-height: 143px; flex-direction: column; align-items: stretch; padding: 11px 11px 10px; border: 1px solid #e8e6da; border-radius: 13px; background: #fffefa; color: var(--ink); cursor: pointer; text-align: left; transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
 .tile:hover { transform: translateY(-2px); border-color: #bad1b6; box-shadow: 0 5px 14px rgba(43, 79, 54, .08); }
 .tile-matched { border-color: #9bc49e; background: #eef7ed; }
 .tile-matched:hover { border-color: #72a979; }
-.tile-free { border-color: #eed99d; background: #fff5db; }
+.tile-free { border-color: #eed99d; background: #fff5db; cursor: default; }
+.tile-free:hover { transform: none; border-color: #eed99d; box-shadow: none; }
 .tile-number { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #9da094; font-size: .62rem; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: .06em; }
 .free-tag { padding: 3px 5px; border-radius: 999px; background: #f3e5bc; color: #8d6e27; font-size: .48rem; letter-spacing: .1em; }
 .tile-prompt { color: #34453b; font-size: .79rem; font-weight: 700; line-height: 1.28; overflow-wrap: anywhere; }
@@ -94,7 +95,7 @@ button, input { font: inherit; }
   .score-note { font-size: .57rem; }
   .board { padding: 17px 13px 14px; border-radius: 17px; }
   .swipe-hint { display: block; }
-  .grid { min-width: 690px; gap: 7px; }
+  .grid { min-width: 580px; gap: 7px; }
   .tile { min-height: 122px; padding: 9px 8px 8px; border-radius: 11px; }
   .tile-prompt { font-size: .77rem; }
   .tile-footer { padding-top: 6px; }

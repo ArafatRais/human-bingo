@@ -1,6 +1,34 @@
 "use strict";
 
 const prompts = [
+  "Hafiz",
+  "Has a sibling at Imperial",
+  "Been to a Premier League game",
+  "Went to Brampton Manor",
+  "Been to a different continent this year",
+  "Speaks Arabic",
+  "Been on TV",
+  "Can cook a traditional meal from scratch",
+  "Doesn’t study medicine or engineering",
+  "Doesn’t drink coffee or tea",
+  "Has a driver’s licence",
+  "Plays or used to play FIFA like it’s a job",
+  "Free space",
+  "Done umrah",
+  "Grew up in the Middle East",
+  "Has gotten lost on campus",
+  "Been to any South Kensington museum",
+  "Speaks Urdu",
+  "Has been locked out of their accom room already",
+  "Is the youngest sibling",
+  "Listens to halal beats while studying",
+  "Still hasn’t unpacked",
+  "Already has ID access to the prayer room",
+  "Signed up for IGym/Ethos",
+  "Brought a console to accom"
+];
+
+const previousPrompts = [
   "Done umrah",
   "Hafiz",
   "Speaks Arabic",
@@ -33,7 +61,11 @@ const prompts = [
   "Loves late-night conversations"
 ];
 
-const storageKey = "human-bingo-project-matches-v1";
+const freeSpaceId = 13;
+const matchableCount = prompts.length - 1;
+const storageKey = "human-bingo-project-matches-v2";
+const oldStorageKey = "human-bingo-project-matches-v1";
+const promptIds = new Map(prompts.map((prompt, index) => [normalizePrompt(prompt), index + 1]));
 const grid = document.querySelector("#bingo-grid");
 const dialog = document.querySelector("#name-dialog");
 const input = document.querySelector("#person-name");
@@ -50,15 +82,42 @@ let matches = loadMatches();
 let activeId = null;
 let lastActiveTile = null;
 
+function normalizePrompt(prompt) {
+  return prompt.toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function readMatches(key, migrateFromPreviousBoard = false) {
+  const raw = localStorage.getItem(key);
+  if (raw === null) return null;
+  const parsed = JSON.parse(raw);
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+
+  return Object.fromEntries(
+    Object.entries(parsed)
+      .filter(([oldId, name]) => {
+        const index = Number(oldId) - 1;
+        return Number.isInteger(Number(oldId)) && index >= 0 && index < (migrateFromPreviousBoard ? previousPrompts.length : prompts.length) && typeof name === "string" && name.trim();
+      })
+      .map(([oldId, name]) => {
+        const oldIndex = Number(oldId) - 1;
+        const id = migrateFromPreviousBoard
+          ? promptIds.get(normalizePrompt(previousPrompts[oldIndex]))
+          : Number(oldId);
+        return [id, name.trim().slice(0, 48)];
+      })
+      .filter(([id]) => Number.isInteger(id) && id !== freeSpaceId)
+  );
+}
+
 function loadMatches() {
   try {
-    const parsed = JSON.parse(localStorage.getItem(storageKey) || "{}");
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
-    return Object.fromEntries(
-      Object.entries(parsed)
-        .filter(([id, name]) => Number(id) >= 1 && Number(id) <= prompts.length && typeof name === "string" && name.trim())
-        .map(([id, name]) => [id, name.trim().slice(0, 48)])
-    );
+    const current = readMatches(storageKey);
+    if (current !== null) return current;
+    const previous = readMatches(oldStorageKey, true) || {};
+    if (Object.keys(previous).length) {
+      localStorage.setItem(storageKey, JSON.stringify(previous));
+    }
+    return previous;
   } catch {
     return {};
   }
@@ -73,18 +132,15 @@ function saveMatches() {
 }
 
 function hasBingo() {
-  const marked = (id) => Boolean(matches[id]?.trim());
+  const marked = (id) => id === freeSpaceId || Boolean(matches[id]?.trim());
   for (let row = 0; row < 5; row += 1) {
-    for (let startColumn = 0; startColumn < 2; startColumn += 1) {
-      if (Array.from({ length: 5 }, (_, offset) => marked(row * 6 + startColumn + offset + 1)).every(Boolean)) return true;
-    }
+    if (Array.from({ length: 5 }, (_, column) => marked(row * 5 + column + 1)).every(Boolean)) return true;
   }
-  for (let column = 0; column < 6; column += 1) {
-    if (Array.from({ length: 5 }, (_, row) => marked(row * 6 + column + 1)).every(Boolean)) return true;
+  for (let column = 0; column < 5; column += 1) {
+    if (Array.from({ length: 5 }, (_, row) => marked(row * 5 + column + 1)).every(Boolean)) return true;
   }
-  for (const [startColumn, direction] of [[0, 1], [1, 1], [4, -1], [5, -1]]) {
-    if (Array.from({ length: 5 }, (_, row) => marked(row * 6 + startColumn + direction * row + 1)).every(Boolean)) return true;
-  }
+  if (Array.from({ length: 5 }, (_, row) => marked(row * 5 + row + 1)).every(Boolean)) return true;
+  if (Array.from({ length: 5 }, (_, row) => marked(row * 5 + (4 - row) + 1)).every(Boolean)) return true;
   return false;
 }
 
@@ -99,19 +155,27 @@ function renderBoard() {
   grid.replaceChildren();
   prompts.forEach((prompt, index) => {
     const id = index + 1;
+    const isFreeSpace = id === freeSpaceId;
     const matchedName = matches[id];
-    const isFreeSpace = prompt === "Free space";
-    const tile = document.createElement("button");
-    tile.type = "button";
+    const tile = document.createElement(isFreeSpace ? "div" : "button");
     tile.className = `tile${matchedName ? " tile-matched" : ""}${isFreeSpace ? " tile-free" : ""}`;
-    tile.setAttribute("aria-pressed", String(Boolean(matchedName)));
-    tile.setAttribute("aria-label", `${prompt}${matchedName ? ` — matched with ${matchedName}` : " — add a name"}`);
+    if (!isFreeSpace) {
+      tile.type = "button";
+      tile.setAttribute("aria-pressed", String(Boolean(matchedName)));
+      tile.setAttribute("aria-label", `${prompt}${matchedName ? ` — matched with ${matchedName}` : " — add a name"}`);
+      tile.addEventListener("click", () => openEditor(id, tile));
+    } else {
+      tile.setAttribute("role", "group");
+      tile.setAttribute("aria-label", "Free space; it counts toward a bingo line.");
+    }
 
     const number = makeSpan("tile-number", String(id).padStart(2, "0"));
-    if (isFreeSpace) number.append(makeSpan("free-tag", "WILD"));
+    if (isFreeSpace) number.append(makeSpan("free-tag", "FREE"));
     const footer = document.createElement("span");
     footer.className = "tile-footer";
-    if (matchedName) {
+    if (isFreeSpace) {
+      footer.append(makeSpan("tap-hint", "Counts toward a line"));
+    } else if (matchedName) {
       const check = makeSpan("check-mark", "✓");
       check.setAttribute("aria-hidden", "true");
       footer.append(check, makeSpan("matched-name", matchedName));
@@ -119,7 +183,6 @@ function renderBoard() {
       footer.append(makeSpan("tap-hint", "Tap to add a name"));
     }
     tile.append(number, makeSpan("tile-prompt", prompt), footer);
-    tile.addEventListener("click", () => openEditor(id, tile));
     grid.append(tile);
   });
   updateProgress();
@@ -129,10 +192,10 @@ function updateProgress() {
   const count = Object.values(matches).filter((name) => name.trim()).length;
   countLabel.replaceChildren(document.createTextNode(String(count)));
   const total = document.createElement("span");
-  total.textContent = " / 30";
+  total.textContent = ` / ${matchableCount}`;
   countLabel.append(total);
   progress.setAttribute("aria-valuenow", String(count));
-  progressFill.style.width = `${(count / prompts.length) * 100}%`;
+  progressFill.style.width = `${(count / matchableCount) * 100}%`;
   clearButton.disabled = count === 0;
   bingoNotice.hidden = !hasBingo();
 }
