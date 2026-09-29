@@ -37,7 +37,6 @@
             </div>
             <button class="clear-button" id="clear-board" type="button" disabled>Clear board</button>
           </div>
-          <p class="bingo-notice" id="bingo-notice" role="status" hidden><span aria-hidden="true">✦</span> BINGO! You found a line of five.</p>
           <p class="swipe-hint">On a phone? Swipe the board sideways to see all five columns.</p>
           <div class="board-scroll" role="region" aria-label="Human bingo card. Swipe horizontally on a phone." tabindex="0">
             <div class="grid" id="bingo-grid" role="group" aria-label="25 bingo squares: 24 clues and one free space"></div>
@@ -69,5 +68,14 @@
         <p class="privacy-note">Names stay in this browser on this device.</p>
       </dialog>
     </main>
+    <div class="celebration" id="celebration" role="status" aria-live="polite" aria-atomic="true" hidden>
+      <div class="celebration-confetti" id="celebration-confetti" aria-hidden="true"></div>
+      <div class="celebration-card">
+        <span class="celebration-sparkle" aria-hidden="true">✦</span>
+        <p class="celebration-kicker">LINE COMPLETE</p>
+        <h2>BINGO!</h2>
+        <p class="celebration-message">Five in a row. You got it!</p>
+      </div>
+    </div>
   </body>
 </html>

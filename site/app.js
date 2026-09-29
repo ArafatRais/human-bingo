@@ -73,10 +73,13 @@ const saveButton = document.querySelector("#save-name");
 const removeButton = document.querySelector("#remove-name");
 const clearButton = document.querySelector("#clear-board");
 const countLabel = document.querySelector("#match-count");
-const bingoNotice = document.querySelector("#bingo-notice");
+const celebration = document.querySelector("#celebration");
+const celebrationConfetti = document.querySelector("#celebration-confetti");
 const dialogPrompt = document.querySelector("#dialog-prompt");
 const dialogTitle = document.querySelector("#dialog-title");
 let matches = loadMatches();
+let hadBingo = hasBingo();
+let celebrationTimer = null;
 let activeId = null;
 let lastActiveTile = null;
 
@@ -142,6 +145,35 @@ function hasBingo() {
   return false;
 }
 
+function createConfetti() {
+  const colors = ["#e97858", "#f3c969", "#478866", "#d98191", "#fbf7ed"];
+  const pieces = Array.from({ length: 44 }, (_, index) => {
+    const piece = document.createElement("span");
+    const duration = 2400 + Math.random() * 1100;
+    piece.className = "confetti-piece";
+    piece.style.setProperty("--x", `${Math.random() * 100}%`);
+    piece.style.setProperty("--drift", `${Math.round(Math.random() * 300 - 150)}px`);
+    piece.style.setProperty("--spin", `${Math.round(Math.random() * 900 + 360)}deg`);
+    piece.style.setProperty("--delay", `${Math.random() * 420}ms`);
+    piece.style.setProperty("--duration", `${duration}ms`);
+    piece.style.setProperty("--piece-color", colors[index % colors.length]);
+    piece.style.setProperty("--piece-size", `${6 + Math.random() * 7}px`);
+    celebrationConfetti.append(piece);
+    return piece;
+  });
+  return pieces;
+}
+
+function celebrateBingo() {
+  window.clearTimeout(celebrationTimer);
+  celebration.hidden = true;
+  void celebration.offsetWidth;
+  celebration.hidden = false;
+  celebrationTimer = window.setTimeout(() => {
+    celebration.hidden = true;
+  }, 3900);
+}
+
 function makeSpan(className, text) {
   const span = document.createElement("span");
   span.className = className;
@@ -193,7 +225,9 @@ function updateStatus() {
   total.textContent = ` / ${matchableCount}`;
   countLabel.append(total);
   clearButton.disabled = count === 0;
-  bingoNotice.hidden = !hasBingo();
+  const bingoNow = hasBingo();
+  if (bingoNow && !hadBingo) celebrateBingo();
+  hadBingo = bingoNow;
 }
 
 function openEditor(id, tile) {
@@ -248,4 +282,5 @@ clearButton.addEventListener("click", () => {
   renderBoard();
 });
 
+createConfetti();
 renderBoard();

@@ -41,9 +41,6 @@ button, input { font: inherit; }
 .clear-button { min-height: 40px; padding: 0 14px; border: 1px solid #ddd9cc; border-radius: 999px; background: transparent; color: #687269; cursor: pointer; font-size: .75rem; }
 .clear-button:hover:not(:disabled) { border-color: #e5aa98; background: #fff5ef; color: #aa5037; }
 .clear-button:disabled { cursor: default; opacity: .45; }
-.bingo-notice { display: flex; align-items: center; gap: 9px; margin: 0 0 16px; padding: 11px 14px; border: 1px solid #f1d990; border-radius: 12px; background: #fff3d4; color: #785c16; font-size: .9rem; font-weight: 700; }
-.bingo-notice span { color: var(--coral); font-size: 1.1rem; }
-.bingo-notice[hidden] { display: none; }
 .swipe-hint { display: none; margin: -5px 0 11px; color: #898d80; font-size: .72rem; }
 .board-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-color: #c9c4b5 #f4f0e6; scrollbar-width: thin; }
 .grid { display: grid; min-width: 580px; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
@@ -80,6 +77,21 @@ button, input { font: inherit; }
 .save-button:hover:not(:disabled) { background: #235f43; }
 .save-button:disabled { cursor: default; opacity: .5; }
 .privacy-note { margin: 15px 0 0; color: #8a9287; font-size: .67rem; text-align: center; }
+.celebration { position: fixed; z-index: 10; inset: 0; display: grid; overflow: hidden; place-items: center; padding: 24px; isolation: isolate; background: rgba(24, 39, 30, .68); backdrop-filter: blur(4px); pointer-events: none; animation: celebration-wash 3900ms ease both; }
+.celebration[hidden] { display: none; }
+.celebration-card { position: relative; z-index: 1; width: min(480px, 100%); padding: 40px 28px 38px; border: 2px solid rgba(255, 255, 255, .82); border-radius: 30px; background: #fbf7ed; box-shadow: 0 28px 100px rgba(0, 0, 0, .28); text-align: center; transform: rotate(-3deg); animation: celebration-pop 3900ms cubic-bezier(.2, .75, .25, 1) both; }
+.celebration-sparkle { display: block; margin-bottom: 8px; color: var(--coral); font-size: 2.5rem; animation: sparkle-spin 900ms ease-in-out 2 both; }
+.celebration-kicker { margin: 0; color: var(--green); font-size: .72rem; font-weight: 800; letter-spacing: .2em; }
+.celebration-card h2 { margin: 3px 0 0; color: var(--coral); font-family: Georgia, "Times New Roman", serif; font-size: clamp(4.5rem, 20vw, 8rem); font-weight: 800; letter-spacing: -.09em; line-height: 1; text-shadow: 3px 4px 0 #f3d998; }
+.celebration-message { margin: 10px 0 0; color: var(--ink); font-size: 1.05rem; font-weight: 700; }
+.celebration-confetti { position: absolute; z-index: 0; inset: 0; overflow: hidden; }
+.confetti-piece { position: absolute; top: -12vh; left: var(--x); width: var(--piece-size); height: calc(var(--piece-size) * 1.55); border-radius: 2px; background: var(--piece-color); box-shadow: 0 1px 2px rgba(0, 0, 0, .12); animation: confetti-fall var(--duration) linear var(--delay) both; }
+.confetti-piece:nth-child(3n) { border-radius: 50%; }
+.confetti-piece:nth-child(4n) { width: calc(var(--piece-size) * .55); height: calc(var(--piece-size) * 2.2); }
+@keyframes celebration-wash { 0%, 88% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes celebration-pop { 0% { opacity: 0; transform: translateY(70px) scale(.45) rotate(-12deg); } 14% { opacity: 1; transform: translateY(-12px) scale(1.08) rotate(3deg); } 24%, 75% { opacity: 1; transform: translateY(0) scale(1) rotate(-2deg); } 100% { opacity: 0; transform: translateY(-28px) scale(.9) rotate(4deg); } }
+@keyframes confetti-fall { 0% { opacity: 0; transform: translate3d(0, -5vh, 0) rotate(0); } 8% { opacity: 1; } 100% { opacity: 0; transform: translate3d(var(--drift), 120vh, 0) rotate(var(--spin)); } }
+@keyframes sparkle-spin { 50% { transform: scale(1.35) rotate(35deg); } }
 @media (max-width: 760px) {
   .page { padding: 15px 13px 25px; }
   .top-note { max-width: 120px; text-align: right; font-size: .68rem; }
@@ -107,4 +119,6 @@ button, input { font: inherit; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+  .celebration, .celebration-card, .celebration-sparkle, .confetti-piece { animation: none !important; }
+  .celebration-confetti { display: none; }
 }
