@@ -19,12 +19,11 @@ button, input { font: inherit; }
   background: radial-gradient(ellipse at 88% 0%, rgba(245, 222, 146, .3), transparent 28rem), #fbf7ed;
 }
 .container { max-width: 1100px; margin: 0 auto; }
-.topbar, .wordmark, .board-heading, .board-footer, .page-footer, .tile-footer, .dialog-topline, .dialog-actions {
+.topbar, .wordmark, .board-heading, .page-footer, .tile-footer, .dialog-topline, .dialog-actions {
   display: flex; align-items: center; justify-content: space-between;
 }
 .topbar { min-height: 48px; padding-bottom: 16px; border-bottom: 1px solid rgba(38, 58, 49, .13); }
 .wordmark { justify-content: flex-start; gap: 9px; color: var(--ink); font-size: .71rem; font-weight: 800; letter-spacing: .12em; }
-.wordmark-icon { display: inline-flex; align-items: center; justify-content: center; width: 27px; height: 27px; border-radius: 10px 10px 10px 2px; background: var(--coral); color: white; font-size: 1rem; }
 .top-note { color: var(--muted); font-size: .78rem; }
 .hero { display: grid; grid-template-columns: minmax(0, 1fr) 195px; align-items: end; gap: 32px; padding: 52px 0 30px; }
 .eyebrow, .board-eyebrow, .score-label, .dialog-eyebrow { margin: 0; color: var(--green); font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
@@ -35,7 +34,6 @@ button, input { font: inherit; }
 .score-label { color: #778075; font-size: .58rem; }
 .score-card strong { margin-top: 5px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 2.65rem; font-weight: 400; letter-spacing: -.06em; line-height: 1.15; }
 .score-card strong span { color: #7c8177; font-family: Arial, Helvetica, sans-serif; font-size: .95rem; letter-spacing: 0; }
-.score-note { color: #777d71; font-size: .65rem; }
 .board { padding: 26px; border: 1px solid #e7e1d3; border-radius: 22px; background: rgba(255, 255, 252, .9); box-shadow: 0 18px 50px rgba(59, 67, 50, .07); }
 .board-heading { gap: 16px; margin-bottom: 17px; }
 .board-eyebrow { color: #9a9b8e; font-size: .58rem; }
@@ -43,10 +41,9 @@ button, input { font: inherit; }
 .clear-button { min-height: 40px; padding: 0 14px; border: 1px solid #ddd9cc; border-radius: 999px; background: transparent; color: #687269; cursor: pointer; font-size: .75rem; }
 .clear-button:hover:not(:disabled) { border-color: #e5aa98; background: #fff5ef; color: #aa5037; }
 .clear-button:disabled { cursor: default; opacity: .45; }
-.progress-track { height: 5px; margin-bottom: 18px; overflow: hidden; border-radius: 999px; background: #eeeadd; }
-.progress-fill { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #63a574, #e97858); transition: width 220ms ease; }
 .bingo-notice { display: flex; align-items: center; gap: 9px; margin: 0 0 16px; padding: 11px 14px; border: 1px solid #f1d990; border-radius: 12px; background: #fff3d4; color: #785c16; font-size: .9rem; font-weight: 700; }
 .bingo-notice span { color: var(--coral); font-size: 1.1rem; }
+.bingo-notice[hidden] { display: none; }
 .swipe-hint { display: none; margin: -5px 0 11px; color: #898d80; font-size: .72rem; }
 .board-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-color: #c9c4b5 #f4f0e6; scrollbar-width: thin; }
 .grid { display: grid; min-width: 580px; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
@@ -63,7 +60,6 @@ button, input { font: inherit; }
 .tap-hint { color: #9a9c91; font-size: .62rem; }
 .check-mark { display: inline-flex; flex: 0 0 17px; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%; background: #4f9462; color: white; font-size: .65rem; }
 .matched-name { color: #326542; font-size: .68rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
-.board-footer { flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 18px; color: #898d80; font-size: .67rem; }
 .page-footer { gap: 12px; padding: 18px 3px 0; color: #899083; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; }
 .dialog { width: min(460px, calc(100% - 28px)); max-width: 460px; padding: 24px; border: 1px solid #e4dfd1; border-radius: 22px; background: #fffefa; color: var(--ink); box-shadow: 0 24px 80px rgba(13, 28, 18, .3); }
 .dialog::backdrop { background: rgba(28, 42, 34, .55); }
@@ -92,7 +88,6 @@ button, input { font: inherit; }
   .intro { font-size: .88rem; }
   .score-card { margin-top: 30px; padding: 12px 11px; border-radius: 14px; }
   .score-card strong { font-size: 2rem; }
-  .score-note { font-size: .57rem; }
   .board { padding: 17px 13px 14px; border-radius: 17px; }
   .swipe-hint { display: block; }
   .grid { min-width: 580px; gap: 7px; }

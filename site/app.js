@@ -72,8 +72,6 @@ const input = document.querySelector("#person-name");
 const saveButton = document.querySelector("#save-name");
 const removeButton = document.querySelector("#remove-name");
 const clearButton = document.querySelector("#clear-board");
-const progress = document.querySelector("#progress");
-const progressFill = document.querySelector("#progress-fill");
 const countLabel = document.querySelector("#match-count");
 const bingoNotice = document.querySelector("#bingo-notice");
 const dialogPrompt = document.querySelector("#dialog-prompt");
@@ -185,17 +183,15 @@ function renderBoard() {
     tile.append(number, makeSpan("tile-prompt", prompt), footer);
     grid.append(tile);
   });
-  updateProgress();
+  updateStatus();
 }
 
-function updateProgress() {
+function updateStatus() {
   const count = Object.values(matches).filter((name) => name.trim()).length;
   countLabel.replaceChildren(document.createTextNode(String(count)));
   const total = document.createElement("span");
   total.textContent = ` / ${matchableCount}`;
   countLabel.append(total);
-  progress.setAttribute("aria-valuenow", String(count));
-  progressFill.style.width = `${(count / matchableCount) * 100}%`;
   clearButton.disabled = count === 0;
   bingoNotice.hidden = !hasBingo();
 }
