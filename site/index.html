@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#fbf7ed">
+    <meta name="description" content="Meet new people with this mobile-friendly human bingo game.">
+    <title>People Bingo — Meet &amp; Mingle</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="page">
+      <div class="container">
+        <header class="topbar">
+          <div class="wordmark">
+            <span class="wordmark-icon" aria-hidden="true">✳</span>
+            <span>MEET &amp; MINGLE</span>
+          </div>
+          <span class="top-note">A game for getting to know each other</span>
+        </header>
+
+        <section class="hero" aria-labelledby="bingo-title">
+          <div>
+            <p class="eyebrow">An icebreaker for your first week</p>
+            <h1 id="bingo-title">People <span>Bingo!</span></h1>
+            <p class="intro">Find someone who fits a clue, ask their name, and fill a square. How many new people can you meet?</p>
+          </div>
+          <aside class="score-card" aria-label="Your progress">
+            <span class="score-label">NAMES FOUND</span>
+            <strong id="match-count" aria-live="polite">0<span> / 30</span></strong>
+            <span class="score-note">one conversation at a time</span>
+          </aside>
+        </section>
+
+        <section class="board" aria-labelledby="board-title">
+          <div class="board-heading">
+            <div>
+              <p class="board-eyebrow">The challenge</p>
+              <h2 id="board-title">Find someone who…</h2>
+            </div>
+            <button class="clear-button" id="clear-board" type="button" disabled>Clear board</button>
+          </div>
+          <div class="progress-track" id="progress" role="progressbar" aria-label="Bingo card progress" aria-valuemin="0" aria-valuemax="30" aria-valuenow="0">
+            <span class="progress-fill" id="progress-fill"></span>
+          </div>
+          <p class="bingo-notice" id="bingo-notice" role="status" hidden><span aria-hidden="true">✦</span> BINGO! You found a line of five.</p>
+          <p class="swipe-hint">On a phone? Swipe the board sideways to see all six columns.</p>
+          <div class="board-scroll" role="region" aria-label="Human bingo card. Swipe horizontally on a phone." tabindex="0">
+            <div class="grid" id="bingo-grid" role="group" aria-label="30 human bingo prompts"></div>
+          </div>
+          <footer class="board-footer">
+            <span>25 prompts from your list + 5 extra icebreakers</span>
+            <span>Names save on this device only</span>
+          </footer>
+        </section>
+
+        <footer class="page-footer">
+          <span>Say hello. Start a conversation.</span>
+          <span>PEOPLE BINGO · 2026</span>
+        </footer>
+      </div>
+
+      <dialog class="dialog" id="name-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-prompt">
+        <div class="dialog-topline">
+          <span class="dialog-eyebrow">YOU FOUND SOMEONE WHO…</span>
+          <button class="close-button" id="close-dialog" type="button" aria-label="Close name entry">×</button>
+        </div>
+        <h2 id="dialog-title">Add a name</h2>
+        <p class="dialog-prompt" id="dialog-prompt"></p>
+        <form class="name-form" id="name-form">
+          <label for="person-name">Who did you meet?</label>
+          <input id="person-name" name="person-name" type="text" autocomplete="off" maxlength="48" placeholder="Type their name" required>
+          <div class="dialog-actions">
+            <button class="remove-button" id="remove-name" type="button" hidden>Remove name</button>
+            <span class="action-spacer"></span>
+            <button class="cancel-button" id="cancel-dialog" type="button">Cancel</button>
+            <button class="save-button" id="save-name" type="submit" disabled>Save name</button>
+          </div>
+        </form>
+        <p class="privacy-note">Names stay in this browser on this device.</p>
+      </dialog>
+    </main>
+  </body>
+</html>
